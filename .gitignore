@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+._*
+
+# Xcode
+Speak/Speak.xcodeproj/xcuserdata/
+Speak/Speak.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcuserstate
+xcuserdata/
+
+# Build artifacts
+*.dmg
+build/
+DerivedData/
+
+# Temporary
+/tmp/
+
+# Icon source files (large, not needed for build)
+icons-v1/
+icons-v2/
