@@ -3,6 +3,17 @@
 A lightweight macOS menu bar app that transcribes your voice and types it directly into any text field — in real time.
 
 Press a hotkey, speak, and watch the text appear wherever your cursor is. Works in any app: browser, terminal, editor, notes.
+<img width="352" height="301" alt="Capture d’écran 2026-05-03 à 12 57 25" src="https://github.com/user-attachments/assets/f491c55f-06c3-43a3-9d4e-83a3dbce8abe" />
+<img width="352" height="301" alt="Capture d’écran 2026-05-03 à 12 57 36" src="https://github.com/user-attachments/assets/39c6a373-5911-4829-bc3e-de4784a61c5d" />
+
+
+
+https://github.com/user-attachments/assets/05701fb7-4435-4aac-8f81-34ecb613fc31
+
+
+
+
+
 
 ## Requirements
 
