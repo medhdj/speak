@@ -122,6 +122,13 @@ speak/
 - Auto-capitalization after punctuation
 - Caps mode ("all caps on/off")
 
+## Privacy
+
+- No telemetry, no analytics, no tracking
+- No data stored — transcripts exist only in memory during the active session
+- No network calls from the app itself
+- Speech recognition is handled by Apple's Speech framework; audio may be processed on-device or sent to Apple's servers depending on your device and language settings
+
 ## License
 
 MIT License — see [LICENSE](LICENSE).

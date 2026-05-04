@@ -10,8 +10,5 @@
     <!-- Note: app must NOT be sandboxed for CGEventTap to work system-wide -->
     <key>com.apple.security.app-sandbox</key>
     <false/>
-
-    <key>com.apple.security.automation.apple-events</key>
-    <true/>
 </dict>
 </plist>
