@@ -17,7 +17,6 @@ class DictationManager: ObservableObject {
 
     var onStateChange: ((DictationState) -> Void)?
 
-    private let speechRecognizer = SFSpeechRecognizer(locale: Locale.autoupdatingCurrent)
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
     private let audioEngine = AVAudioEngine()
@@ -68,8 +67,17 @@ class DictationManager: ObservableObject {
             return
         }
 
-        guard let recognizer = speechRecognizer, recognizer.isAvailable else {
-            DispatchQueue.main.async { self.errorMessage = "Speech recognizer not available." }
+        // Create recognizer based on selected locale
+        let locale: Locale
+        let localeId = HotKeySettings.shared.recognitionLocale
+        if localeId.isEmpty {
+            locale = Locale.autoupdatingCurrent
+        } else {
+            locale = Locale(identifier: localeId)
+        }
+
+        guard let recognizer = SFSpeechRecognizer(locale: locale), recognizer.isAvailable else {
+            DispatchQueue.main.async { self.errorMessage = "Speech recognizer not available for selected language." }
             return
         }
 
@@ -79,7 +87,7 @@ class DictationManager: ObservableObject {
         isFinishing = false
 
         do {
-            try beginAudioSession()
+            try beginAudioSession(recognizer: recognizer)
             DispatchQueue.main.async {
                 self.state = .listening
                 self.lastText = ""
@@ -93,7 +101,7 @@ class DictationManager: ObservableObject {
         }
     }
 
-    private func beginAudioSession() throws {
+    private func beginAudioSession(recognizer: SFSpeechRecognizer) throws {
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
         guard let recognitionRequest else {
             throw NSError(domain: "Speak", code: 1, userInfo: [NSLocalizedDescriptionKey: "Could not create recognition request"])
@@ -104,7 +112,7 @@ class DictationManager: ObservableObject {
         let inputNode = audioEngine.inputNode
         let recordingFormat = inputNode.outputFormat(forBus: 0)
 
-        recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest) { [weak self] result, error in
+        recognitionTask = recognizer.recognitionTask(with: recognitionRequest) { [weak self] result, error in
             guard let self, !self.isFinishing else { return }
 
             if let result {

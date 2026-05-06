@@ -1,4 +1,5 @@
 import SwiftUI
+import Speech
 
 struct PopoverView: View {
     @ObservedObject var dictationManager: DictationManager
@@ -12,7 +13,7 @@ struct PopoverView: View {
             SettingsTab(hotKeySettings: hotKeySettings)
                 .tabItem { Label("Settings", systemImage: "gearshape") }
         }
-        .frame(width: 280, height: 220)
+        .frame(width: 280, height: 280)
         .padding(.top, 4)
     }
 }
@@ -140,9 +141,40 @@ struct SettingsTab: View {
 
     // Local state for the key picker selection
     @State private var selectedKeyCode: CGKeyCode = HotKeySettings.shared.keyCode
+    @State private var selectedLocale: String = HotKeySettings.shared.recognitionLocale
+
+    /// All supported locales sorted by display name
+    private var supportedLocales: [(id: String, name: String)] {
+        SFSpeechRecognizer.supportedLocales()
+            .map { locale -> (id: String, name: String) in
+                let id = locale.identifier
+                // Show locale name in its own language (e.g. "Français (France)")
+                let name = locale.localizedString(forIdentifier: id) ?? id
+                return (id: id, name: name.prefix(1).uppercased() + name.dropFirst())
+            }
+            .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
+
+            // Language picker
+            Text("Language")
+                .font(.headline)
+
+            Picker("", selection: $selectedLocale) {
+                Text("System Default").tag("")
+                ForEach(supportedLocales, id: \.id) { entry in
+                    Text(entry.name).tag(entry.id)
+                }
+            }
+            .labelsHidden()
+            .frame(maxWidth: .infinity)
+            .onChange(of: selectedLocale) { newValue in
+                hotKeySettings.recognitionLocale = newValue
+            }
+
+            Divider()
 
             Text("Hotkey")
                 .font(.headline)
@@ -195,6 +227,7 @@ struct SettingsTab: View {
         .padding(14)
         .onAppear {
             selectedKeyCode = hotKeySettings.keyCode
+            selectedLocale = hotKeySettings.recognitionLocale
         }
     }
 }

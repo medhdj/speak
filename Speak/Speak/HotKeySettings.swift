@@ -34,6 +34,12 @@ class HotKeySettings: ObservableObject {
         didSet { UserDefaults.standard.set(modControl, forKey: "hotkey.modControl") }
     }
 
+    /// Speech recognition locale identifier (e.g. "fr-FR", "en-US").
+    /// Empty string means use system default locale.
+    @Published var recognitionLocale: String {
+        didSet { UserDefaults.standard.set(recognitionLocale, forKey: "recognitionLocale") }
+    }
+
     private init() {
         let ud = UserDefaults.standard
         keyCode  = CGKeyCode(ud.object(forKey: "hotkey.keyCode") as? Int ?? 49)
@@ -41,6 +47,7 @@ class HotKeySettings: ObservableObject {
         modShift    = ud.object(forKey: "hotkey.modShift")    as? Bool ?? true
         modOption   = ud.object(forKey: "hotkey.modOption")   as? Bool ?? false
         modControl  = ud.object(forKey: "hotkey.modControl")  as? Bool ?? false
+        recognitionLocale = ud.object(forKey: "recognitionLocale") as? String ?? ""
     }
 
     // MARK: - Helpers
